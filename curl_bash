@@ -1,0 +1,14 @@
+curl -H "Host: domain.com" https://ipaddress/hostname.com/path
+
+curl -k -H "Host: domain.com" https://ipaddress/hostname.com/path
+
+curl -H "Host: domain.com" https://ipaddress/hostname.com/path --cacert /C/Users/user/cert.pem
+
+export SSL_CERT_FILE=/C/Users/user/file.pem
+
+curl -k --> for accepting all
+curl -I for redirects
+
+~/.bashrc //put export above
+
+curl https://domain.com --cacert /C/Users/user/document/cert.pem

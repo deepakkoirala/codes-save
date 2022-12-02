@@ -1,0 +1,164 @@
+https://gist.github.com/sid24rane/6e6698e93360f2694e310dd347a2e2eb
+https://npmdoc.github.io/node-npmdoc-ntp-client/build/apidoc.html
+
+var aa = new Buffer(48);
+aa[0] = 0x1B;
+for(var i =1;i<48;i++){
+	aa[i] = 0;
+}
+console.log(aa);
+
+var udp = require('dgram');
+
+//var buffer = require('buffer');
+
+// creating a client socket
+var client = udp.createSocket('udp4');
+
+//buffer msg
+//var data = Buffer.from('siddheshrane');
+
+client.on('message',function(msg, info){
+   console.log(msg);
+   // var t = "";
+   // msg.map(d=>{
+	   // t += d;
+   // });
+   // console.log(t);
+   var offsetTransmitTime = 40,
+		intpart = 0,
+		fractpart = 0;
+
+	// Get the seconds part
+	for (var i = 0; i <= 3; i++) {
+		intpart = 256 * intpart + msg[offsetTransmitTime + i];
+	}
+
+	// Get the seconds fraction
+	for (i = 4; i <= 7; i++) {
+		fractpart = 256 * fractpart + msg[offsetTransmitTime + i];
+	}
+
+	var milliseconds = (intpart * 1000 + (fractpart * 1000) / 0x100000000);
+	
+	console.log(milliseconds);
+	
+	var date = new Date("Jan 01 1900 GMT");
+    date.setUTCMilliseconds(date.getUTCMilliseconds() + milliseconds);
+	
+	console.log(date);
+	
+  console.log('Data received from server : ' + msg.toString());
+  console.log('Received %d bytes from %s:%d\n',msg.length, info.address, info.port);
+});
+
+client.on('error',function(msg){
+  console.log('error from server : ' + msg);
+});
+
+//sending msg
+client.send(aa,123,'',function(error){
+  if(error){
+    client.close();
+  }else{
+    console.log('Data sent !!!');
+  }
+});
+
+// var dgram = require('dgram');
+
+// var getNetworkTime = function (server, port, callback) {
+    // if (callback === null || typeof callback !== "function") {
+        // return;
+    // }
+
+    // server = server || exports.defaultNtpServer;
+    // port = port || exports.defaultNtpPort;
+
+    // var client = dgram.createSocket("udp4"),
+        // ntpData = new Buffer(48);
+
+    // // RFC 2030 -> LI = 0 (no warning, 2 bits), VN = 3 (IPv4 only, 3 bits), Mode = 3 (Client Mode, 3 bits) -> 1 byte
+    // // -> rtol(LI, 6) ^ rotl(VN, 3) ^ rotl(Mode, 0)
+    // // -> = 0x00 ^ 0x18 ^ 0x03
+    // ntpData[0] = 0x1B;
+
+    // for (var i = 1; i < 48; i++) {
+        // ntpData[i] = 0;
+    // }
+
+    // var timeout = setTimeout(function () {
+        // client.close();
+        // callback("Timeout waiting for NTP response.", null);
+    // }, 1000);
+
+    // // Some errors can happen before/after send() or cause send() to was impossible.
+    // // Some errors will also be given to the send() callback.
+    // // We keep a flag, therefore, to prevent multiple callbacks.
+    // // NOTE : the error callback is not generalised, as the client has to lose the connection also, apparently.
+    // var errorFired = false;
+
+    // client.on('error', function (err) {
+        // if (errorFired) {
+            // return;
+        // }
+
+        // callback(err, null);
+        // errorFired = true;
+
+        // clearTimeout(timeout);
+    // });
+
+    // client.send(ntpData, 0, ntpData.length, port, server, function (err) {
+        // if (err) {
+            // if (errorFired) {
+                // return;
+            // }
+            // clearTimeout(timeout);
+            // callback(err, null);
+            // errorFired = true;
+            // client.close();
+            // return;
+        // }
+
+        // client.once('message', function (msg) {
+			// console.log(msg);
+            // clearTimeout(timeout);
+            // client.close();
+
+            // // Offset to get to the "Transmit Timestamp" field (time at which the reply
+            // // departed the server for the client, in 64-bit timestamp format."
+            // var offsetTransmitTime = 40,
+                // intpart = 0,
+                // fractpart = 0;
+
+            // // Get the seconds part
+            // for (var i = 0; i <= 3; i++) {
+                // intpart = 256 * intpart + msg[offsetTransmitTime + i];
+            // }
+
+            // // Get the seconds fraction
+            // for (i = 4; i <= 7; i++) {
+                // fractpart = 256 * fractpart + msg[offsetTransmitTime + i];
+            // }
+
+            // var milliseconds = (intpart * 1000 + (fractpart * 1000) / 0x100000000);
+
+            // // **UTC** time
+            // var date = new Date("Jan 01 1900 GMT");
+            // date.setUTCMilliseconds(date.getUTCMilliseconds() + milliseconds);
+
+            // callback(null, date);
+        // });
+    // });
+// }
+
+// getNetworkTime("", 123, function(err, date) {
+// if(err) {
+    // console.error(err);
+    // return;
+// }
+
+// console.log("Current time : ");
+// console.log(date); // Mon Jul 08 2013 21:31:31 GMT+0200 (Paris, Madrid (heure d’été))
+// });

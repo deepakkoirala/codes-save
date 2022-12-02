@@ -1,0 +1,74 @@
+<div id="screenshot">
+	<video style="display:none" autoplay width="500" height="400"></div>
+	<img id="img" width="500" height="400"/>
+	
+	<canvas style="display:none;"></canvas><br>
+	<button class="capture-button">Capture Screenshot</button>
+	<button style="display:none" id="screenshot-button">Save Screenshot</button>
+
+</div>
+<body>
+
+</body>
+
+<script>
+	const captureVideoButton = document.querySelector(".capture-button");
+	const screenshotButton=document.querySelector("#screenshot-button");
+	
+	var imgs = document.querySelector("#img");
+	
+	const video = document.querySelector("#screenshot video");
+	//const video = document.createElement("video");
+	//document.body.append(video);
+	
+	const canvas = document.createElement("canvas");
+	
+	var captureStream;
+	
+	captureVideoButton.addEventListener('click', function(){
+		captureStream = navigator.mediaDevices['getDisplayMedia']().then(stream=>{
+		video.srcObject = stream;
+		//setTimeout(()=>{
+		//	captureImage();
+		//},500);
+		
+			video.onloadedmetadata = () => {
+              video.play()
+              video.pause()
+              captureImage();
+            }
+			
+		}).catch(err => {console.log(err);});
+	
+	})
+	
+	screenshotButton.addEventListener('click', function(){
+		captureImage();	
+	})
+	
+	function captureImage(){
+		canvas.width = video.videoWidth;
+		canvas.height = video.videoHeight;
+		
+		canvas.getContext('2d').drawImage(video,0,0);
+		
+		let dataUrl = canvas.toDataURL('image/png');
+		
+		let tracks = video.srcObject.getTracks();
+
+			tracks.forEach(track => track.stop());
+		
+		console.log(imgs);
+		imgs.src = dataUrl;
+		
+		/*var hrefElement = document.createElement('a');
+		hrefElement.href = dataUrl;
+		document.body.append(hrefElement);
+		hrefElement.download = "Screeenshot.png";
+		hrefElement.click();
+		hrefElement.remove();
+		*/
+	
+	}
+
+</script>

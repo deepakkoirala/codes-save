@@ -1,0 +1,63 @@
+$ echo "vim or emacs ?" > test_file.txt
+
+$ openssl rsautl -encrypt -inkey public.key -pubin -in test_file.txt -out test_file.enc
+
+
+$ cat test_file.enc
+encrypted contents
+
+$ hexdump test_file.enc
+bash: hexdump: command not found
+
+
+$ openssl rsautl -decrypt -inkey PrivateKey.key.txt -in test_file.enc > test_file.txt
+Enter pass phrase for PrivateKey.key.txt:
+
+
+$ openssl rsautl -decrypt -inkey PrivateKey.key.txt -in test_file.enc > test_file1.txt
+Enter pass phrase for PrivateKey.key.txt:
+
+
+$ openssl rsautl -encrypt -inkey public.key -pubin -in test_file.txt -out test_file2.enc
+
+
+$ openssl rsautl -decrypt -inkey PrivateKey.key.txt -in test_file2.enc > test_file2.txt
+Enter pass phrase for PrivateKey.key.txt:
+
+
+$ openssl rsautl -decrypt -inkey PrivateKey.key.txt -in test_file2.enc > test_file2.txt
+Enter pass phrase for PrivateKey.key.txt:
+
+
+$ openssl rsautl -decrypt -inkey PrivateKey.key.txt -in test_file2.enc > test_file2.txt
+Enter pass phrase for PrivateKey.key.txt:
+
+
+$ openssl rsautl -encrypt -inkey public.key -pubin -in test_file.txt -out test_file2.enc
+
+
+$ openssl rsautl -encrypt -inkey PrivateKey.key.txt -in test_file.txt -out test_file_byprivate.enc
+
+
+$ openssl aes-256-cbc -salt -a -e -in cmds.zip -out encrypted.txt
+enter aes-256-cbc encryption password:
+Verifying - enter aes-256-cbc encryption password:
+*** WARNING : deprecated key derivation used.
+Using -iter or -pbkdf2 would be better.
+
+
+$ openssl aes-256-cbc -salt -a -d -in encrypted.txt -out cmd.zip
+enter aes-256-cbc decryption password:
+*** WARNING : deprecated key derivation used.
+Using -iter or -pbkdf2 would be better.
+
+
+
+$ cat test_file.txt | openssl rsautl -inkey PrivateKey.key.txt -sign > test_file_p.txt.enc
+openssl rsautl -inkey PrivateKey.key.txt -in test_file.txt -sign > test_file.txt.enc
+
+Enter pass phrase for PrivateKey.key.txt:
+
+
+$ openssl rsautl -inkey public.key -pubin -in test_file.txt.enc
+vim or emacs ?

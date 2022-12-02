@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+	<h1 id="h11">Home - Saranepal.com</h1>
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+		}
+
+		h1 {
+			height: 5vh;
+			background: red;
+			color: white;
+			padding: 20px;
+		}
+
+		body {
+			padding: 0;
+			margin: 0;
+			background: green;
+			overflow-y: hidden;
+		}
+
+		iframe {
+			border: 0;
+			width: 100vw;
+			aaheight: 90vh;
+		}
+	</style>
+
+	<iframe src="https://www.saranepal.com" id="ifram" title="W3Schools Free Online Web Tutorials">
+	</iframe>
+
+</body>
+<script>
+	var header = document.getElementById("h11");
+	var headHeight = header.offsetHeight;
+	//alert(window.innerHeight);
+	var iframeHeight = window.innerHeight - headHeight;
+	document.getElementById("ifram").style.height = iframeHeight + "px";
+</script>
+
+</html>

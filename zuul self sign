@@ -1,0 +1,13 @@
+//https://stackoverflow.com/questions/50949443/setting-up-two-way-ssl-authentication-on-pivotal-cloud-foundry
+	@Bean
+    public CloseableHttpClient zuulHttpClient() throws Throwable {
+		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+		SSLContext sslContext = SSLContextBuilder.create().loadTrustMaterial(null, acceptingTrustStrategy).build();
+//		HttpClient client = HttpClients.custom().setSSLContext(sslContext).build();
+//		return builder.requestFactory(() -> new HttpComponentsClientHttpRequestFactory(client)).build();
+//		return (CloseableHttpClient) client;
+		final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        httpClientBuilder.setSSLContext(sslContext);
+        return httpClientBuilder.build();
+		
+	}

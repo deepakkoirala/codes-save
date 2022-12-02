@@ -1,0 +1,87 @@
+<button style="position: absolute; top: 10%; left: 30%">Connect</button>
+
+<script>
+  navigator.serial.addEventListener('connect', (e) => {
+    // Connect to `e.target` or add it to a list of available ports.
+    console.log('connected');
+  });
+
+  navigator.serial.addEventListener('disconnect', (e) => {
+    // Remove `e.target` from the list of available ports.
+  });
+
+  navigator.serial.getPorts().then((ports) => {
+    // Initialize the list of available ports with `ports` on page load.
+    console.log(ports);
+  });
+
+  var button = document.querySelector('button');
+
+  async function read() {
+    //const {port} = await navigator.serial.requestPort();
+  }
+
+  button.addEventListener('click', async () => {
+    //const usbVendorId = 0xABCD;
+    //navigator.serial.requestPort({ filters: [{ usbVendorId }]}).then((port) => {
+    //navigator.serial.requestPort({ }).then((port) => {
+    // Connect to `port` or add it to the list of available ports.
+
+    const port = await navigator.serial.requestPort({});
+
+    const { usbProductId, usbVendorId } = port.getInfo();
+
+    console.log(usbProductId, usbVendorId);
+
+    //await port.open({ baudRate: 115200, dataBits: 8, stopBits:2, bufferSize: 16777216  });
+    await port.open({ baudRate: 115200 });
+
+    while (port.readable) {
+      const reader = port.readable.getReader();
+
+      let _data = '';
+      let _onFlight = true;
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          //if (done) {
+          // |reader| has been canceled.
+          //	break;
+          //}
+          // Do something with |value|...
+          //console.log(value);
+          var string = new TextDecoder().decode(value);
+          //console.log("Data--: " + string);
+          document.querySelector('pre').append(string);
+          //console.error(string.charCodeAt(string.length-1))
+          if (string.charCodeAt(string.length - 1) != 10) {
+            _data = _data + string;
+            //console.log(_data);
+          }
+          if (string.charCodeAt(string.length - 1) == 10) {
+            //console.log(_data);
+            _data = _data + string;
+            _onFlight = false;
+            //console.log(string);
+          }
+          if (_onFlight == false) {
+            //if the data stream is completed for new line
+            console.log(_data);
+            _data = '';
+            _onFlight = true;
+          }
+        }
+      } catch (error) {
+        // Handle |error|...
+        console.log(error);
+      } finally {
+        reader.releaseLock();
+      }
+    }
+
+    //}).catch((e) => {
+    // The user didn't select a port.
+    //});
+  });
+</script>
+<pre></pre>

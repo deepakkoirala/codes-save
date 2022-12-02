@@ -1,0 +1,45 @@
+@Component
+@Configuration
+public class Constants {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Constants.class);
+
+	@Value("${ssl.trust.store}")
+	private String trustStore;
+
+	@Value("${ssl.trust.store.password}")
+	private String password;
+
+	@Value("${ssl.trustStore.label}")
+	private String label;
+
+	@Autowired
+	CertificateConfig certificateConfig;
+
+	@PostConstruct
+	public void init() {
+		try {
+			System.out.println(
+					"trustStore path-->" + certificateConfig.getCertificate(label, trustStore).getAbsolutePath());
+			System.setProperty("javax.net.ssl.trustStore",
+					certificateConfig.getCertificate(label, trustStore).getAbsolutePath());
+		} catch (Exception e) {
+			LOGGER.error("****Error in init() method of Constants*****", e);
+		}
+	}
+
+	/*
+	 * @Bean public RestTemplate restTemplate(RestTemplateBuilder builder)
+	 * throws Exception { return builder.build(); }
+	 */
+
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) throws Exception {
+		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+		SSLContext sslContext = SSLContextBuilder.create().loadTrustMaterial(null, acceptingTrustStrategy).build();
+		HttpClient client = HttpClients.custom().setSSLContext(sslContext).build();
+		return builder.requestFactory(() -> new HttpComponentsClientHttpRequestFactory(client)).build();
+
+	}
+
+}

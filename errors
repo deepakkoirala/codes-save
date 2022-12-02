@@ -1,0 +1,6 @@
+sweetalert2.all.js:242 SweetAlert2: "onBeforeOpen" is deprecated and will be removed in the next major release. Please use "willOpen" instead
+sweetalert2.all.js:242 SweetAlert2: "onOpen" is deprecated and will be removed in the next major release. Please use "didOpen" instead
+SweetAlert2: "onRender" is deprecated and will be removed in the next major release. Please use "didRender" instead.
+SweetAlert2: "onClose" is deprecated and will be removed in the next major release. Please use "willClose" instead.
+SweetAlert2: "onAfterClose" is deprecated and will be removed in the next major release. Please use "didClose" instead.
+SweetAlert2: "onDestroy" is deprecated and will be removed in the next major release. Please use "didDestroy" instead.

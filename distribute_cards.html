@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+	<h2>JavaScript For Loop</h2>
+
+	<p id="demo"></p>
+
+	<script>
+		var players = 4;
+var cards = 3;
+var cardLocation = 0;
+
+var decks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+
+var text = "";
+for (var i = 1; i <= cards; i++) {
+  var k = 2;
+  for(var j = 1; j <= players; j++) {
+		text += "Players: " + k + ": " + decks[cardLocation] + "<br>";
+        if(k < players)
+        	k++;
+         else if( k == players)
+         	k = 1;
+		cardLocation++;
+   }
+   
+}
+
+
+document.getElementById("demo").innerHTML = text;
+	</script>
+
+</body>
+
+</html>

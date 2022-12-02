@@ -1,0 +1,13 @@
+<?php
+$manager = new MongoDB\Driver\Manager('');
+
+$query = new MongoDB\Driver\Query(array('_id' => '62a1dc0c7309d53c3501a9e9'));
+
+$cursor = $manager->executeQuery('DBNAME.collectioname',  new MongoDB\Driver\Query(array()));
+
+//print_r($cursor->toArray());
+foreach ($cursor as $document) {
+	echo $document->title. "<br>";
+}
+
+?>
