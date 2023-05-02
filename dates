@@ -1,0 +1,28 @@
+var startDateString = "2023-05-01";
+var startDate = moment(startDateString);
+var endDate = moment(startDateString).add(2,'week'); //moment("2023-05-15");
+
+var aDate = moment(startDate).day('Monday');
+var aDate2 = moment(startDate).day('Thursday');
+
+let dates = [];
+
+while (aDate.isSameOrBefore(endDate)) {
+   // console.log(".");
+   if(aDate.isSameOrAfter(startDate) || aDate2.isSameOrAfter(startDate)){
+	   var mon = moment(aDate).day('Monday');
+	   if (mon.isSameOrBefore(endDate) && mon.isSameOrAfter(startDate)){
+		   dates.push(mon.format("YYYY-MM-DD"));
+		   // console.log(mon.format("YYYY-MM-DD"));
+	   }
+	   var thurs = moment(aDate).day('Thursday');
+	   if (thurs.isSameOrBefore(endDate) && thurs.isSameOrAfter(startDate)){
+		   dates.push(thurs.format("YYYY-MM-DD"));
+		   // console.log(thurs.format("YYYY-MM-DD"));
+	   }
+   }
+
+   aDate = aDate.add(1, 'week');
+}
+
+console.log(dates);
