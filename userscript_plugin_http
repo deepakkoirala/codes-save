@@ -1,0 +1,59 @@
+// ==UserScript==
+// @name         Interceptor
+// @namespace    http://tampermonkey.net/
+// @version      2024-02-22
+// @description  try to take over the world!
+// @author       You
+// @match        https://*/*
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Your code here...
+    let oldXHROpen = window.XMLHttpRequest.prototype.open;
+    window.XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+        console.log(arguments);
+        // do something with the method, url and etc.
+        this.addEventListener('load', function() {
+            // do something with the response text
+            console.log('load: ' + this.responseText);
+            return "test";
+        });
+
+        return oldXHROpen.apply(this, arguments);
+    }
+
+    const origHTTP = XMLHttpRequest;
+    const origSend = origHTTP.prototype.send;
+    const origHead = origHTTP.prototype.setRequestHeader;
+
+    XMLHttpRequest.prototype.send = function (body) {
+        this.setRequestHeader('Token', "helloooo");
+        // console.log("body",body);
+
+        this.addEventListener("readystatechange", function () {
+            // console.log('readystate: ' + this.readyState);
+
+             if ( this.readyState === 4 ) {
+                 let oldResponse = this.responseText;
+                 Object.defineProperty(this, 'response', {writable: true});
+                 Object.defineProperty(this, 'responseText', {writable: true});
+                  // this.responseText = "New Response Body\n" + oldResponse;
+                 // console.log(this);
+                 this.responseText = oldResponse;
+             }
+        }, false);
+
+        origSend.apply(this, arguments);
+    };
+
+    XMLHttpRequest.prototype.setRequestHeader = function(key, val){
+        console.log("Header:", key, val);
+        origHead.apply(this,arguments);
+    }
+
+
+})();
