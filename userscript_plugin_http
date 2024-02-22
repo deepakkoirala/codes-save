@@ -43,7 +43,11 @@
                  Object.defineProperty(this, 'responseText', {writable: true});
                   // this.responseText = "New Response Body\n" + oldResponse;
                  // console.log(this);
+                 console.log(this);
                  this.responseText = oldResponse;
+                 // this.getAllResponseHeaders = function(){
+                 //     return "testtt: testt\r\n";
+                 // }
              }
         }, false);
 
